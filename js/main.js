@@ -6,6 +6,14 @@ var MAP_HEIGHT_MIN = 130 + SIZE_PIN;
 var MAP_HEIGHT_MAX = 630 + SIZE_PIN;
 var MAP_WIDTH_MIN = document.querySelector('.map__overlay').offsetLeft + SIZE_PIN;
 var MAP_WIDTH_MAX = document.querySelector('.map__overlay').offsetWidth - SIZE_PIN;
+// Функция для поиска координат главной метки
+var mainPin = document.querySelector('.map__pin--main');
+var getCoordsMainPin = function () {
+  var coordsMainPin = getCoords(mainPin);
+  var adress = document.querySelector('#address');
+  adress.value = coordsMainPin.left + ', ' + coordsMainPin.bottom;
+};
+getCoordsMainPin();
 // Задаём массив типов предложений и функцию случайной выдачи типа
 var typeOffer = ['palace', 'flat', 'house', 'bungalo'];
 function getTypeOffer() {
@@ -37,13 +45,11 @@ function generateRandomOffer() {
 // Формируем массив с помощью функции генерации
 var offers = [];
 for (var i = 0; i < AMOUNT_OFFERS; i++) {
-  var generatedOffer = generateRandomOffer();
-  offers[i] = generatedOffer;
+  offers.push(generateRandomOffer());
 }
 // Открываем карту
-document.querySelector('.map').classList.remove('map--faded');
+//
 var listPins = document.querySelector('.map__pins');
-
 var pin = document.querySelector('#pin').content.querySelector('.map__pin');
 
 // Задаём функцию создания одного маркера
@@ -69,4 +75,38 @@ var createListOffers = function () {
   listPins.appendChild(fragment);
 };
 
-createListOffers();
+// Module4
+// Блокируем все fieldset
+var getDisabledFieldsets = function (value) {
+  var allFieldset = document.querySelectorAll('.ad-form__element');
+  var inputHeader = document.querySelector('.ad-form-header');
+  inputHeader.disabled = value;
+  for (var j = 0; j < allFieldset.length; j++) {
+    allFieldset[j].disabled = value;
+  }
+};
+getDisabledFieldsets(true);
+
+// Функция для поиска координат на документе
+function getCoords(elem) {
+  var box = elem.getBoundingClientRect();
+
+  return {
+    left: box.left + pageXOffset,
+    bottom: box.bottom + pageYOffset
+  };
+}
+
+// Производим активацию страницы
+var getPinClickHadler = function () {
+  mainPin.addEventListener('click', function () {
+    document.querySelector('.map').classList.remove('map--faded');
+    document.querySelector('.ad-form').classList.remove('ad-form--disabled');
+    getDisabledFieldsets(false);
+    createListOffers();
+  });
+  mainPin.addEventListener('mouseup', function () {
+    getCoordsMainPin();
+  });
+};
+getPinClickHadler();
