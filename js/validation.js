@@ -1,13 +1,13 @@
 'use strict';
 
-
-var validation = function () {
-  var price = document.querySelector('#price');
-  var selectTypesHouse = document.querySelector('#type');
+(function () {
   var PRICE_BUNGALO = 0;
   var PRICE_FLAT = 1000;
   var PRICE_HOUSE = 5000;
   var PRICE_PALACE = 10000;
+
+  var price = document.querySelector('#price');
+  var selectTypesHouse = document.querySelector('#type');
 
   var timeIn = document.querySelector('#timein');
   var timeOut = document.querySelector('#timeout');
@@ -37,9 +37,7 @@ var validation = function () {
       price.placeholder = PRICE_PALACE;
     }
   };
-  selectTypesHouse.addEventListener('change', function () {
-    addMinPrice();
-  });
+  selectTypesHouse.addEventListener('change', addMinPrice);
 
   // Функции синхронизации даты заезда и выезда
   var syncTimeIn = function () {
@@ -54,10 +52,6 @@ var validation = function () {
     }
   };
 
-  timeIn.addEventListener('change', function () {
-    syncTimeIn();
-  });
-
   var syncTimeOut = function () {
     for (var i = 0; i < timeIn.options.length; i++) {
       var checkTimeOut = timeOut.options[i];
@@ -69,8 +63,7 @@ var validation = function () {
     }
   };
 
-  timeOut.addEventListener('change', function () {
-    syncTimeOut();
-  });
-};
-validation();
+  timeIn.addEventListener('change', syncTimeIn);
+  timeOut.addEventListener('change', syncTimeOut);
+
+})();
