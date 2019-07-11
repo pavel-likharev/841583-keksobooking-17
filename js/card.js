@@ -1,9 +1,13 @@
 'use strict';
 
 (function () {
+  var AMOUNT_OFFERS = 9;
+
   var mainPin = document.querySelector('.map__pin--main');
   var listPins = document.querySelector('.map__pins');
   var pin = document.querySelector('#pin').content.querySelector('.map__pin');
+  var error = document.querySelector('#error').content.querySelector('.error');
+  var mainPage = document.querySelector('main');
 
   // Задаём функцию создания одного маркера
   var renderPin = function (offer) {
@@ -17,17 +21,24 @@
     return pinElement;
   };
   // Задаём функцию создания необходимого количества маркеров
-  var createListOffers = function () {
+  var successHandler = function (offers) {
     var fragment = document.createDocumentFragment();
 
-    for (var j = 0; j < window.offers.length; j++) {
-      var generatedPin = renderPin(window.offers[j]);
+    for (var i = 0; i < AMOUNT_OFFERS; i++) {
+      var generatedPin = renderPin(offers[i]);
       fragment.appendChild(generatedPin);
     }
 
     listPins.appendChild(fragment);
   };
 
-  mainPin.addEventListener('mouseup', createListOffers);
+  var errorHandler = function () {
+    var errorElement = error.cloneNode(true);
+    mainPage.appendChild(errorElement);
+  };
+
+  mainPin.addEventListener('mouseup', function () {
+    window.load(successHandler, errorHandler);
+  });
 
 })();
