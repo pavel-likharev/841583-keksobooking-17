@@ -2,18 +2,19 @@
 
 (function () {
 
+  var AMOUNT_OFFERS = 5;
+
+  // var map = document.querySelector('.map');
   var mainPin = document.querySelector('.map__pin--main');
   var listPins = document.querySelector('.map__pins');
   var pin = document.querySelector('#pin').content.querySelector('.map__pin');
   var error = document.querySelector('#error').content.querySelector('.error');
   var mainPage = document.querySelector('main');
-
   var mapFilters = document.querySelector('.map__filters');
   var filterTypes = mapFilters.querySelector('#housing-type');
   var filterTypesList = mapFilters.querySelector('#housing-type').options;
 
   var offers = [];
-
 
   // Задаём функцию создания шаблона одного маркера
   var renderPin = function (offer) {
@@ -28,14 +29,38 @@
     return pinElement;
   };
 
-  // Задаём функцию создания списка предложений
-  var render = function (listOffers) {
-    removeOffers();
-    var takeNumber = listOffers.length > 5 ? 5 : listOffers.length;
-    for (var i = 0; i < takeNumber; i++) {
-      listPins.appendChild(renderPin(listOffers[i]));
-    }
+  var callRenderCard = function (dataOffers, numberPin) {
+    window.card.render(dataOffers, numberPin);
   };
+
+  // Задаём функцию создания списка предложений
+  var renderMap = function (listOffers) {
+    removeOffers();
+
+    var fragment = document.createDocumentFragment();
+    var takeNumber = listOffers.length > AMOUNT_OFFERS ? AMOUNT_OFFERS : listOffers.length;
+    for (var i = 0; i < takeNumber; i++) {
+      var generatedPin = renderPin(listOffers[i]);
+      generatedPin.addEventListener('click', function () {
+        callRenderCard(offers, 0);
+      });
+      // вариант с отрисовкой
+      fragment.appendChild(generatedPin);
+    }
+
+    listPins.appendChild(fragment);
+  };
+
+  // var onPinCallCards = function () {
+  //   var listOfPins = listPins.querySelectorAll('.render__pin');
+  //   listOfPins.forEach(function (onePin) {
+  //     onePin.addEventListener('click', function() {
+  //       callRenderCard(offers, 0);
+  //     })
+  //   })
+  // };
+  // вариант с обработчиками уже после создания, только вместо 0 поставить свой объект
+
 
   // Задаём функцию удаления списка пинов перед сортировкой
   var removeOffers = function () {
@@ -48,7 +73,6 @@
   // Задаём функцию действий при успешной загрузке данных
   var successHandler = function (data) {
     offers = data;
-    render(offers);
   };
 
   // Задаём функцию действий при ошибке загрузки данных
@@ -57,13 +81,16 @@
     mainPage.appendChild(errorElement);
   };
 
+  window.load(successHandler, errorHandler);
+
   // Обработчик, вызывающий загрузку данных
-  var callLoad = function () {
-    window.load(successHandler, errorHandler);
-    mainPin.removeEventListener('mouseup', callLoad);
+  var callRender = function () {
+    renderMap(offers);
+    // onPinCallCards();
+    mainPin.removeEventListener('mouseup', callRender);
   };
 
-  mainPin.addEventListener('mouseup', callLoad);
+  mainPin.addEventListener('mouseup', callRender);
 
   // Функция сортировки данных по фильтрам
   var getSelectedOption = function () {
@@ -89,7 +116,13 @@
   };
 
   filterTypes.addEventListener('change', function () {
-    render(sortingByType());
+    renderMap(sortingByType());
   });
+
+  // listPins.addEventListener('click', function (event) {
+  //   var target = event.target;
+  //   if (target.className === 'map__pin') {
+  //     alert('zzz');
+  //   }
 
 })();
