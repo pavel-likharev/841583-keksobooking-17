@@ -42,7 +42,7 @@
     for (var i = 0; i < takeNumber; i++) {
       var generatedPin = renderPin(listOffers[i]);
       generatedPin.addEventListener('click', function () {
-        callRenderCard(offers, 0);
+        callRenderCard(offers, 1);
       });
       // вариант с отрисовкой
       fragment.appendChild(generatedPin);
