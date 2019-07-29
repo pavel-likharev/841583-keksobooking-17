@@ -3,13 +3,15 @@
 (function () {
 
   var mainPin = document.querySelector('.map__pin--main');
-  var map = document.querySelector('.map__overlay');
+  var map = document.querySelector('.map');
+  var mapOverlay = document.querySelector('.map__overlay');
+  var form = document.querySelector('.ad-form');
 
   var limits = {
-    top: map.offsetTop,
-    right: map.offsetWidth + map.offsetLeft - mainPin.offsetWidth,
-    bottom: map.offsetHeight + map.offsetTop - mainPin.offsetHeight,
-    left: map.offsetLeft
+    top: mapOverlay.offsetTop,
+    right: mapOverlay.offsetWidth + mapOverlay.offsetLeft - mainPin.offsetWidth,
+    bottom: mapOverlay.offsetHeight + mapOverlay.offsetTop - mainPin.offsetHeight,
+    left: mapOverlay.offsetLeft
   };
 
   var getCoords = function (elem) {
@@ -22,7 +24,7 @@
   };
 
   // Функция для поиска координат на документе
-  var getCoordsMainPin = function () {
+  window.pin.getCoordsMainPin = function () {
     var coordsMainPin = getCoords(mainPin);
     var adress = document.querySelector('#address');
     adress.value = coordsMainPin.left + ', ' + coordsMainPin.bottom;
@@ -31,11 +33,11 @@
   // Производим активацию страницы
   var getPinClickHadler = function () {
     mainPin.addEventListener('mousedown', function () {
-      document.querySelector('.map').classList.remove('map--faded');
-      document.querySelector('.ad-form').classList.remove('ad-form--disabled');
+      map.classList.remove('map--faded');
+      form.classList.remove('ad-form--disabled');
     });
     mainPin.addEventListener('mousemove', function () {
-      getCoordsMainPin();
+      window.pin.getCoordsMainPin();
     });
   };
   getPinClickHadler();

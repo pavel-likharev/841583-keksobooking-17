@@ -35,7 +35,7 @@
 
   // Задаём функцию создания списка предложений
   var renderMap = function (listOffers) {
-    removeOffers();
+    window.removeOffers();
 
     var fragment = document.createDocumentFragment();
     var takeNumber = listOffers.length > AMOUNT_OFFERS ? AMOUNT_OFFERS : listOffers.length;
@@ -63,7 +63,7 @@
 
 
   // Задаём функцию удаления списка пинов перед сортировкой
-  var removeOffers = function () {
+  window.removeOffers = function () {
     var renderPins = listPins.querySelectorAll('.render__pin');
     for (var i = 0; i < renderPins.length; i++) {
       listPins.removeChild(renderPins[i]);
@@ -78,7 +78,9 @@
   // Задаём функцию действий при ошибке загрузки данных
   var errorHandler = function () {
     var errorElement = error.cloneNode(true);
-    mainPage.appendChild(errorElement);
+    var fragment = document.createDocumentFragment();
+    fragment.appendChild(errorElement);
+    mainPage.appendChild(fragment);
   };
 
   window.load(successHandler, errorHandler);

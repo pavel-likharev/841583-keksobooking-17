@@ -45,16 +45,16 @@
     // их перебором, с совпадением из верхнего цикла вставлять цену
     if (selectedType === 'bungalo') {
       price.min = PRICE_BUNGALO;
-      price.placeholder = PRICE_BUNGALO;
+
     } else if (selectedType === 'flat') {
       price.min = PRICE_FLAT;
-      price.placeholder = PRICE_FLAT;
+
     } else if (selectedType === 'house') {
       price.min = PRICE_HOUSE;
-      price.placeholder = PRICE_HOUSE;
+
     } else if (selectedType === 'palace') {
       price.min = PRICE_PALACE;
-      price.placeholder = PRICE_PALACE;
+
     }
   };
   selectTypesHouse.addEventListener('change', addMinPrice);
@@ -90,26 +90,26 @@
 
   var syncRoomsGuests = function () {
     if (Rooms.ONE_ROOMS.selected && Guests.TWO_GUESTS.selected) {
-      guestsNumber.setCustomValidity('Выберите две комнаты');
+      roomsNumber.setCustomValidity('Выберите две комнаты');
     } else if (Rooms.ONE_ROOMS.selected && Guests.THREE_GUESTS.selected) {
-      guestsNumber.setCustomValidity('Выберите три комнаты');
+      roomsNumber.setCustomValidity('Выберите три комнаты');
     } else if (Rooms.TWO_ROOMS.selected && Guests.THREE_GUESTS.selected) {
-      guestsNumber.setCustomValidity('Выберите три комнаты');
+      roomsNumber.setCustomValidity('Выберите три комнаты');
     } else if ((Rooms.ONE_ROOMS.selected || Rooms.TWO_ROOMS.selected || Rooms.THREE_ROOMS.selected) && Guests.NONE_GUESTS.selected) {
-      guestsNumber.setCustomValidity('Выберите сто комнат');
+      roomsNumber.setCustomValidity('Выберите сто комнат');
     } else if (Rooms.ONE_HUNDRED_ROOMS.selected && (Guests.ONE_GUESTS.selected || Guests.TWO_GUESTS.selected || Guests.THREE_GUESTS.selected)) {
-      guestsNumber.setCustomValidity('Выберите отсутствие гостей');
+      guestsNumber.setCustomValidity('Выберите 100 гостей');
     } else if (
       (Rooms.ONE_ROOMS.selected && Guests.ONE_GUESTS.selected) ||
       (Rooms.TWO_ROOMS.selected && (Guests.ONE_GUESTS.selected || Guests.TWO_GUESTS.selected)) ||
       (Rooms.THREE_ROOMS.selected && (Guests.ONE_GUESTS.selected || Guests.TWO_GUESTS.selected || Guests.THREE_GUESTS.selected)) ||
       (Rooms.ONE_HUNDRED_ROOMS.selected && Guests.NONE_GUESTS.selected)) {
       guestsNumber.setCustomValidity('');
+      roomsNumber.setCustomValidity('');
     }
   };
   btnSubmitForm.addEventListener('click', syncRoomsGuests);
   roomsNumber.addEventListener('change', syncRoomsGuests);
   guestsNumber.addEventListener('change', syncRoomsGuests);
-
 
 })();
