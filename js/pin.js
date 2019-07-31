@@ -29,6 +29,7 @@
     var adress = document.querySelector('#address');
     adress.value = coordsMainPin.left + ', ' + coordsMainPin.bottom;
   };
+  window.pin.getCoordsMainPin();
 
   // Производим активацию страницы
   var getPinClickHadler = function () {

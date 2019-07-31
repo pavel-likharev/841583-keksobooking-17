@@ -11,10 +11,14 @@
   var error = document.querySelector('#error').content.querySelector('.error');
   var mainPage = document.querySelector('main');
   var mapFilters = document.querySelector('.map__filters');
-  var filterTypes = mapFilters.querySelector('#housing-type');
-  var filterTypesList = mapFilters.querySelector('#housing-type').options;
+  var filterType = mapFilters.querySelector('#housing-type');
+  var filterPrice = mapFilters.querySelector('#housing-price');
+  var filterRooms = mapFilters.querySelector('#housing-rooms');
+  var filterGuests = mapFilters.querySelector('#housing-guests');
+  // var filterFeatures = mapFilters.querySelectorAll('.map__checkbox');
 
   var offers = [];
+
 
   // Задаём функцию создания шаблона одного маркера
   var renderPin = function (offer) {
@@ -95,30 +99,109 @@
   mainPin.addEventListener('mouseup', callRender);
 
   // Функция сортировки данных по фильтрам
-  var getSelectedOption = function () {
-    for (var i = 0; i < filterTypesList.length; i++) {
-      if (filterTypesList[i].selected) {
-        var checkOption = filterTypesList[i].value;
+
+  var searchSelectedOption = function (kindOfFilter) {
+    for (var i = 0; i < kindOfFilter.length; i++) {
+      if (kindOfFilter[i].selected) {
+        var selectedOption = kindOfFilter[i].value;
       }
     }
-    return checkOption;
+    return selectedOption;
   };
 
-  var sortingByType = function () {
-    if (getSelectedOption() === 'any') {
+  // var searchCheckedCheckbox = function (kindOfFilter) {
+  //   var checkedCheckboxes = [];
+  //   for (var i = 0; i < kindOfFilter.length; i++) {
+  //     if (kindOfFilter[i].checked) {
+  //       checkedCheckboxes.push(kindOfFilter[i].value);
+  //     }
+  //   }
+  //   return checkedCheckboxes;
+  // };
+
+  var sortingByFilter = function () {
+    if (
+      searchSelectedOption(filterType) === 'any' &&
+      searchSelectedOption(filterPrice) === 'any' &&
+      searchSelectedOption(filterRooms) === 'any' &&
+      searchSelectedOption(filterGuests) === 'any') {
       return offers;
     } else {
       var newOffers = offers
       .slice()
       .filter(function (pinOffer) {
-        return pinOffer.offer.type === getSelectedOption();
-      });
+        var sortingOffers;
+        if (searchSelectedOption(filterType) === 'any') {
+          sortingOffers = pinOffer.offer.type;
+        } else {
+          sortingOffers = pinOffer.offer.type === searchSelectedOption(filterType);
+        }
+        return sortingOffers;
+      })
+      .filter(function (pinOffer) {
+        var sortingOffers;
+        if (searchSelectedOption(filterRooms) === 'any') {
+          sortingOffers = pinOffer.offer.rooms;
+        } else {
+          sortingOffers = pinOffer.offer.rooms === parseInt(searchSelectedOption(filterRooms), 10);
+        }
+        return sortingOffers;
+      })
+      .filter(function (pinOffer) {
+        var sortingOffers;
+        if (searchSelectedOption(filterGuests) === 'any') {
+          sortingOffers = pinOffer.offer.guests;
+        } else {
+          sortingOffers = pinOffer.offer.guests === parseInt(searchSelectedOption(filterGuests), 10);
+        }
+        return sortingOffers;
+      })
+      .filter(function (pinOffer) {
+        var PriceList = {
+          'middle': pinOffer.offer.price >= '10000' && pinOffer.offer.price <= '50000',
+          'low': pinOffer.offer.price < '10000',
+          'high': pinOffer.offer.price > '50000'
+        };
+        var sortingOffers;
+        if (searchSelectedOption(filterPrice) === 'any') {
+          sortingOffers = pinOffer.offer.price;
+        } else if (searchSelectedOption(filterPrice) === 'middle') {
+          sortingOffers = PriceList.middle;
+        } else if (searchSelectedOption(filterPrice) === 'low') {
+          sortingOffers = PriceList.low;
+        } else if (searchSelectedOption(filterPrice) === 'high') {
+          sortingOffers = PriceList.high;
+        }
+        return sortingOffers;
+      })
+      // .filter(function (pinOffer) {
+      //   if (searchCheckedCheckbox(filterFeatures).length === 0) {
+      //     return pinOffer.offer.features;
+      //   } else {
+      //     var checkboxes = [];
+      //     for (var i = 0; i < searchCheckedCheckbox(filterFeatures).length; i++) {
+      //       checkboxes.push(searchCheckedCheckbox(filterFeatures)[i]);
+      //     }
+      //     for (var k = 0; k < checkboxes.length; k++) {
+      //       return pinOffer.offer.features.indexOf(checkboxes[k]) !== -1; // найти способ вместо цикла сравнить два массива и вывести return, т.к. он останавливает цикл
+      //     }
+      //   }
+      // })
+      // Код вызвращает фильтрацию только по одному чекбоксу из массива чекбоксов
+      ;
+
       return newOffers;
     }
   };
 
-  filterTypes.addEventListener('change', function () {
-    renderMap(sortingByType());
+  var lastTimeout;
+  mapFilters.addEventListener('change', function () {
+    if (lastTimeout) {
+      window.clearTimeout(lastTimeout);
+    }
+    lastTimeout = window.setTimeout(function () {
+      renderMap(sortingByFilter());
+    }, 500);
   });
 
   // listPins.addEventListener('click', function (event) {
@@ -126,5 +209,9 @@
   //   if (target.className === 'map__pin') {
   //     alert('zzz');
   //   }
+  // .....
+  // for (var i = 0; i < searchCheckedCheckbox(filterFeatures).length; i++) {
+  //   return pinOffer.offer.features.indexOf(searchCheckedCheckbox(filterFeatures)[i]) !== -1;
+  // }
 
 })();
