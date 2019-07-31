@@ -26,12 +26,26 @@
       return copyCard;
     };
 
+    var translateNameType = function (type) {
+      var translatedType;
+      if (type === 'bungalo') {
+        translatedType = 'Бунгало';
+      } else if (type === 'palace') {
+        translatedType = 'Дворец';
+      } else if (type === 'flat') {
+        translatedType = 'Квартира';
+      } else if (type === 'house') {
+        translatedType = 'Дом';
+      }
+      return translatedType;
+    };
+
     cardAvatar.src = dataElement.author.avatar;
     cardAvatar.alt = 'Аватар автора';
     cardTitle.innerText = dataElement.offer.title;
     cardAddress.innerText = dataElement.offer.address;
     cardPrice.innerText = dataElement.offer.price + '₽/ночь';
-    cardType.innerText = dataElement.offer.type;
+    cardType.innerText = translateNameType(dataElement.offer.type);
     cardCapacity.innerText = dataElement.offer.rooms + ' комнаты для ' + dataElement.offer.guests + ' гостей.';
     cardTime.innerText = 'Заезд после ' + dataElement.offer.checkin + ', выезд до ' + dataElement.offer.checkout;
     cardDescription.innerText = dataElement.offer.description;
@@ -40,7 +54,7 @@
       var searchedFeature;
       var nameFeature = cardFeature.className;
       dataElement.offer.features.forEach(function (feature) {
-        if (nameFeature.indexOf(feature) >= 0) {
+        if (nameFeature.indexOf(feature) !== -1) {
           searchedFeature = cardFeature;
         }
       });
@@ -66,6 +80,10 @@
     var fragment = document.createDocumentFragment();
     var number = numberOfAuthor;
     var generatedCard = renderCard(listCards[number]);
+    var close = generatedCard.querySelector('.popup__close');
+    close.addEventListener('click', function () {
+      map.removeChild(generatedCard);
+    });
     fragment.appendChild(generatedCard);
     map.appendChild(fragment);
   };

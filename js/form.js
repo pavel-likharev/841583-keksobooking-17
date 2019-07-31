@@ -11,6 +11,7 @@
   var mainPage = document.querySelector('main');
   var error = document.querySelector('#error').content.querySelector('.error');
   var success = document.querySelector('#success').content.querySelector('.success');
+  var btnSubmit = form.querySelector('.ad-form__submit');
 
   var startCoordsMainPin = {};
 
@@ -82,6 +83,8 @@
 
   form.addEventListener('submit', function (event) {
     window.upload(new FormData(form), successHandler, errorHandler);
+    btnSubmit.disabled = true;
+    window.pinHadler();
     event.preventDefault();
   });
 })();

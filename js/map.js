@@ -4,9 +4,10 @@
 
   var AMOUNT_OFFERS = 5;
 
-  // var map = document.querySelector('.map');
+  var map = document.querySelector('.map');
   var mainPin = document.querySelector('.map__pin--main');
   var listPins = document.querySelector('.map__pins');
+  var btnSubmit = document.querySelector('.ad-form__submit');
   var pin = document.querySelector('#pin').content.querySelector('.map__pin');
   var error = document.querySelector('#error').content.querySelector('.error');
   var mainPage = document.querySelector('main');
@@ -46,7 +47,12 @@
     for (var i = 0; i < takeNumber; i++) {
       var generatedPin = renderPin(listOffers[i]);
       generatedPin.addEventListener('click', function () {
-        callRenderCard(offers, 1);
+        var card = map.querySelector('article');
+        if (card !== null) { // условие, если карточка отрисована - не вызывать рендер, а если нет - вызывать
+          return;
+        } else {
+          callRenderCard(offers, 1);
+        }
       });
       // вариант с отрисовкой
       fragment.appendChild(generatedPin);
@@ -91,13 +97,16 @@
 
   // Обработчик, вызывающий загрузку данных
   var callRender = function () {
+    btnSubmit.disabled = false;
     renderMap(offers);
     // onPinCallCards();
     mainPin.removeEventListener('mouseup', callRender);
   };
 
-  mainPin.addEventListener('mouseup', callRender);
-
+  window.pinHadler = function () {
+    mainPin.addEventListener('mouseup', callRender);
+  };
+  window.pinHadler();
   // Функция сортировки данных по фильтрам
 
   var searchSelectedOption = function (kindOfFilter) {
@@ -132,7 +141,7 @@
       .filter(function (pinOffer) {
         var sortingOffers;
         if (searchSelectedOption(filterType) === 'any') {
-          sortingOffers = pinOffer.offer.type;
+          sortingOffers = pinOffer;
         } else {
           sortingOffers = pinOffer.offer.type === searchSelectedOption(filterType);
         }
@@ -141,18 +150,19 @@
       .filter(function (pinOffer) {
         var sortingOffers;
         if (searchSelectedOption(filterRooms) === 'any') {
-          sortingOffers = pinOffer.offer.rooms;
+          sortingOffers = pinOffer;
         } else {
-          sortingOffers = pinOffer.offer.rooms === parseInt(searchSelectedOption(filterRooms), 10);
+          sortingOffers = String(pinOffer.offer.rooms) === searchSelectedOption(filterRooms);
+
         }
         return sortingOffers;
       })
       .filter(function (pinOffer) {
         var sortingOffers;
         if (searchSelectedOption(filterGuests) === 'any') {
-          sortingOffers = pinOffer.offer.guests;
+          sortingOffers = pinOffer;
         } else {
-          sortingOffers = pinOffer.offer.guests === parseInt(searchSelectedOption(filterGuests), 10);
+          sortingOffers = String(pinOffer.offer.guests) === searchSelectedOption(filterGuests);
         }
         return sortingOffers;
       })
@@ -164,7 +174,7 @@
         };
         var sortingOffers;
         if (searchSelectedOption(filterPrice) === 'any') {
-          sortingOffers = pinOffer.offer.price;
+          sortingOffers = pinOffer;
         } else if (searchSelectedOption(filterPrice) === 'middle') {
           sortingOffers = PriceList.middle;
         } else if (searchSelectedOption(filterPrice) === 'low') {
@@ -213,5 +223,7 @@
   // for (var i = 0; i < searchCheckedCheckbox(filterFeatures).length; i++) {
   //   return pinOffer.offer.features.indexOf(searchCheckedCheckbox(filterFeatures)[i]) !== -1;
   // }
+
+  // черновик на время
 
 })();
