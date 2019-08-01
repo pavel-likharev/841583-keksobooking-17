@@ -2,7 +2,10 @@
 
 (function () {
 
+  var ESC_KEYCODE = 27;
+
   var map = document.querySelector('.map');
+  var mapFilters = document.querySelector('.map__filters');
   var card = document.querySelector('#card').content.querySelector('.map__card');
 
   var renderCard = function (dataElement) {
@@ -76,10 +79,17 @@
     return cardElement;
   };
 
-  window.card.render = function (listCards, numberOfAuthor) {
+  window.card.render = function (listCards) {
     var fragment = document.createDocumentFragment();
-    var number = numberOfAuthor;
-    var generatedCard = renderCard(listCards[number]);
+    var generatedCard = renderCard(listCards);
+    generatedCard.classList.add('visible__card');
+    document.addEventListener('keydown', function (evt) {
+      if (evt.keyCode === ESC_KEYCODE) {
+        evt.preventDefault();
+        map.removeChild(generatedCard);
+      }
+    });
+    mapFilters.addEventListener('change', window.removeCard);
     var close = generatedCard.querySelector('.popup__close');
     close.addEventListener('click', function () {
       map.removeChild(generatedCard);

@@ -14,12 +14,14 @@
     left: mapOverlay.offsetLeft
   };
 
+  var pinCoords;
+
   var getCoords = function (elem) {
-    var box = elem.getBoundingClientRect();
+    pinCoords = elem.getBoundingClientRect();
 
     return {
-      left: box.left + pageXOffset,
-      bottom: box.bottom + pageYOffset
+      left: (pinCoords.left - (pinCoords.width / 2)) + pageXOffset,
+      bottom: (pinCoords.bottom - (pinCoords.height / 2)) + pageYOffset
     };
   };
 
@@ -34,6 +36,7 @@
   // Производим активацию страницы
   var getPinClickHadler = function () {
     mainPin.addEventListener('mousedown', function () {
+      window.pin.getCoordsMainPin();
       map.classList.remove('map--faded');
       form.classList.remove('ad-form--disabled');
     });

@@ -35,7 +35,7 @@
   };
   getDisabledFieldsets(true);
 
-  mainPin.addEventListener('mousedown', function () {
+  mainPin.addEventListener('mousemove', function () {
     getDisabledFieldsets(false);
   });
 
@@ -87,4 +87,6 @@
     window.pinHadler();
     event.preventDefault();
   });
+
+  btnReset.addEventListener('click', resetPage);
 })();

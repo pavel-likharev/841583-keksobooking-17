@@ -46,12 +46,13 @@
     var takeNumber = listOffers.length > AMOUNT_OFFERS ? AMOUNT_OFFERS : listOffers.length;
     for (var i = 0; i < takeNumber; i++) {
       var generatedPin = renderPin(listOffers[i]);
+      var offer = offers[i];
       generatedPin.addEventListener('click', function () {
         var card = map.querySelector('article');
         if (card !== null) { // условие, если карточка отрисована - не вызывать рендер, а если нет - вызывать
           return;
         } else {
-          callRenderCard(offers, 1);
+          callRenderCard(offer);
         }
       });
       // вариант с отрисовкой
@@ -78,6 +79,11 @@
     for (var i = 0; i < renderPins.length; i++) {
       listPins.removeChild(renderPins[i]);
     }
+  };
+
+  window.removeCard = function () {
+    var visibleCard = map.querySelector('.visible__card');
+    map.removeChild(visibleCard);
   };
 
   // Задаём функцию действий при успешной загрузке данных
@@ -199,7 +205,6 @@
       // })
       // Код вызвращает фильтрацию только по одному чекбоксу из массива чекбоксов
       ;
-
       return newOffers;
     }
   };
