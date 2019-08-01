@@ -46,7 +46,7 @@
     var takeNumber = listOffers.length > AMOUNT_OFFERS ? AMOUNT_OFFERS : listOffers.length;
     for (var i = 0; i < takeNumber; i++) {
       var generatedPin = renderPin(listOffers[i]);
-      var offer = offers[i];
+      var offer = listOffers[i];
       generatedPin.addEventListener('click', function () {
         var card = map.querySelector('article');
         if (card !== null) { // условие, если карточка отрисована - не вызывать рендер, а если нет - вызывать
