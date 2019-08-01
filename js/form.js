@@ -4,6 +4,7 @@
 
   var ESC_KEYCODE = 27;
   var AVATAR_DEFAULT = 'img/muffin-grey.svg';
+  var HEIGHT_PIN = 62;
 
   var form = document.querySelector('.ad-form');
   var btnReset = form.querySelector('.ad-form__reset');
@@ -49,7 +50,8 @@
     mainPin.style.left = startCoordsMainPin.leftCoord;
     mainPin.style.top = startCoordsMainPin.topCoord;
     map.classList.add('map--faded');
-    window.pin.getCoordsMainPin();
+    window.pinHadler();
+    window.pin.getCoordsMainPin(HEIGHT_PIN);
     window.removeOffers();
     var photos = photosContainer.querySelectorAll('.upload__photo');
     for (var i = 0; i < photos.length; i++) {

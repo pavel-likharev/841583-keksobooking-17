@@ -2,10 +2,14 @@
 
 (function () {
 
+  var HEIGHT_POINTER_PIN = 84;
+  var HEIGHT_PIN = 62;
+
   var mainPin = document.querySelector('.map__pin--main');
   var map = document.querySelector('.map');
   var mapOverlay = document.querySelector('.map__overlay');
   var form = document.querySelector('.ad-form');
+
 
   var limits = {
     top: mapOverlay.offsetTop,
@@ -16,32 +20,32 @@
 
   var pinCoords;
 
-  var getCoords = function (elem) {
+  var getCoords = function (elem, height) {
     pinCoords = elem.getBoundingClientRect();
 
     return {
-      left: (pinCoords.left - (pinCoords.width / 2)) + pageXOffset,
-      bottom: (pinCoords.bottom - (pinCoords.height / 2)) + pageYOffset
+      left: (pinCoords.left + (pinCoords.width / 2)) + pageXOffset,
+      top: (pinCoords.top + height) + pageYOffset
     };
   };
 
   // Функция для поиска координат на документе
-  window.pin.getCoordsMainPin = function () {
-    var coordsMainPin = getCoords(mainPin);
+  window.pin.getCoordsMainPin = function (height) {
+    var coordsMainPin = getCoords(mainPin, height);
     var adress = document.querySelector('#address');
-    adress.value = coordsMainPin.left + ', ' + coordsMainPin.bottom;
+    adress.value = coordsMainPin.left + ', ' + coordsMainPin.top;
   };
-  window.pin.getCoordsMainPin();
+  window.pin.getCoordsMainPin(HEIGHT_PIN);
 
   // Производим активацию страницы
   var getPinClickHadler = function () {
     mainPin.addEventListener('mousedown', function () {
-      window.pin.getCoordsMainPin();
+      window.pin.getCoordsMainPin(HEIGHT_POINTER_PIN);
       map.classList.remove('map--faded');
       form.classList.remove('ad-form--disabled');
     });
     mainPin.addEventListener('mousemove', function () {
-      window.pin.getCoordsMainPin();
+      window.pin.getCoordsMainPin(HEIGHT_POINTER_PIN);
     });
   };
   getPinClickHadler();
