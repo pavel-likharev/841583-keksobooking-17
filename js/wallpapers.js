@@ -44,6 +44,7 @@
         photosAdForm.classList.remove('hidden');
         var copyForm = photosAdForm.cloneNode();
         photosAdForm.classList.add('hidden');
+        copyForm.classList.add('upload__photo');
         var image = document.createElement('img');
         image.src = reader.result;
         image.width = 70;

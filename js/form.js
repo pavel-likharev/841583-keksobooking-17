@@ -3,6 +3,8 @@
 (function () {
 
   var ESC_KEYCODE = 27;
+  var AVATAR_DEFAULT = 'img/muffin-grey.svg';
+  var HEIGHT_PIN = 62;
 
   var form = document.querySelector('.ad-form');
   var btnReset = form.querySelector('.ad-form__reset');
@@ -12,6 +14,8 @@
   var error = document.querySelector('#error').content.querySelector('.error');
   var success = document.querySelector('#success').content.querySelector('.success');
   var btnSubmit = form.querySelector('.ad-form__submit');
+  var photosContainer = document.querySelector('.ad-form__photo-container');
+  var avatar = document.querySelector('.ad-form-header__preview img');
 
   var startCoordsMainPin = {};
 
@@ -35,7 +39,7 @@
   };
   getDisabledFieldsets(true);
 
-  mainPin.addEventListener('mousedown', function () {
+  mainPin.addEventListener('mousemove', function () {
     getDisabledFieldsets(false);
   });
 
@@ -46,8 +50,14 @@
     mainPin.style.left = startCoordsMainPin.leftCoord;
     mainPin.style.top = startCoordsMainPin.topCoord;
     map.classList.add('map--faded');
-    window.pin.getCoordsMainPin();
+    window.pinHadler();
+    window.pin.getCoordsMainPin(HEIGHT_PIN);
     window.removeOffers();
+    var photos = photosContainer.querySelectorAll('.upload__photo');
+    for (var i = 0; i < photos.length; i++) {
+      photosContainer.removeChild(photos[i]);
+    }
+    avatar.src = AVATAR_DEFAULT;
   };
 
   var successHandler = function () {
@@ -87,4 +97,6 @@
     window.pinHadler();
     event.preventDefault();
   });
+
+  btnReset.addEventListener('click', resetPage);
 })();

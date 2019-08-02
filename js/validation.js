@@ -45,16 +45,16 @@
     // их перебором, с совпадением из верхнего цикла вставлять цену
     if (selectedType === 'bungalo') {
       price.min = PRICE_BUNGALO;
-
+      price.placeholder = PRICE_BUNGALO;
     } else if (selectedType === 'flat') {
       price.min = PRICE_FLAT;
-
+      price.placeholder = PRICE_FLAT;
     } else if (selectedType === 'house') {
       price.min = PRICE_HOUSE;
-
+      price.placeholder = PRICE_HOUSE;
     } else if (selectedType === 'palace') {
       price.min = PRICE_PALACE;
-
+      price.placeholder = PRICE_PALACE;
     }
   };
   selectTypesHouse.addEventListener('change', addMinPrice);
