@@ -30,12 +30,17 @@
     pinImage.src = offer.author.avatar;
     pinImage.alt = offer.offer.type;
     pinElement.classList.add('render__pin');
+    pinElement.addEventListener('click', function () {
 
+      var card = map.querySelector('article');
+      if (card !== null) { // условие, если карточка отрисована - не вызывать рендер, а если нет - вызывать
+        return;
+      } else {
+        window.card.render(offer);
+
+      }
+    });
     return pinElement;
-  };
-
-  var callRenderCard = function (dataOffers, numberPin) {
-    window.card.render(dataOffers, numberPin);
   };
 
   // Задаём функцию создания списка предложений
@@ -46,32 +51,10 @@
     var takeNumber = listOffers.length > AMOUNT_OFFERS ? AMOUNT_OFFERS : listOffers.length;
     for (var i = 0; i < takeNumber; i++) {
       var generatedPin = renderPin(listOffers[i]);
-      var offer = listOffers[i];
-      generatedPin.addEventListener('click', function () {
-        var card = map.querySelector('article');
-        if (card !== null) { // условие, если карточка отрисована - не вызывать рендер, а если нет - вызывать
-          return;
-        } else {
-          callRenderCard(offer);
-        }
-      });
-      // вариант с отрисовкой
       fragment.appendChild(generatedPin);
     }
-
     listPins.appendChild(fragment);
   };
-
-  // var onPinCallCards = function () {
-  //   var listOfPins = listPins.querySelectorAll('.render__pin');
-  //   listOfPins.forEach(function (onePin) {
-  //     onePin.addEventListener('click', function() {
-  //       callRenderCard(offers, 0);
-  //     })
-  //   })
-  // };
-  // вариант с обработчиками уже после создания, только вместо 0 поставить свой объект
-
 
   // Задаём функцию удаления списка пинов перед сортировкой
   window.removeOffers = function () {
@@ -83,7 +66,9 @@
 
   window.removeCard = function () {
     var visibleCard = map.querySelector('.visible__card');
-    map.removeChild(visibleCard);
+    if (visibleCard !== null) {
+      map.removeChild(visibleCard);
+    }
   };
 
   // Задаём функцию действий при успешной загрузке данных

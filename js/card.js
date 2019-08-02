@@ -79,20 +79,20 @@
     return cardElement;
   };
 
-  window.card.render = function (listCards) {
+  window.card.render = function (dataCard) {
     var fragment = document.createDocumentFragment();
-    var generatedCard = renderCard(listCards);
+    var generatedCard = renderCard(dataCard);
     generatedCard.classList.add('visible__card');
-    document.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === ESC_KEYCODE) {
-        evt.preventDefault();
-        map.removeChild(generatedCard);
-      }
-    });
     mapFilters.addEventListener('change', window.removeCard);
     var close = generatedCard.querySelector('.popup__close');
     close.addEventListener('click', function () {
       map.removeChild(generatedCard);
+    });
+    document.addEventListener('keydown', function (evt) {
+      if (evt.keyCode === ESC_KEYCODE) {
+        evt.preventDefault();
+        window.removeCard();
+      }
     });
     fragment.appendChild(generatedCard);
     map.appendChild(fragment);
