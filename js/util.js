@@ -10,7 +10,8 @@
         window.clearTimeout(lastTimeout);
       }
       lastTimeout = window.setTimeout(cb, DEBOUNCE_INTERVAL);
-    }
+    },
+    ESC_KEYCODE: 27
   };
 
 })();

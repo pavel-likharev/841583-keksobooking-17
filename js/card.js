@@ -1,8 +1,6 @@
 'use strict';
 
 (function () {
-  var ESC_KEYCODE = 27;
-
   var map = document.querySelector('.map');
   var mapFilters = document.querySelector('.map__filters');
   var templateCard = document.querySelector('#card').content.querySelector('.map__card');
@@ -32,8 +30,7 @@
 
     cardPhotos.removeChild(cardPhoto);
     var createCopyCardPhoto = function () {
-      var copyCard = cardPhoto.cloneNode(true);
-      return copyCard;
+      return cardPhoto.cloneNode(true);
     };
 
     var translateNameType = function (type) {
@@ -87,7 +84,7 @@
       map.removeChild(generatedCard);
     });
     document.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === ESC_KEYCODE) {
+      if (evt.keyCode === window.util.ESC_KEYCODE) {
         evt.preventDefault();
         window.removeCard();
       }

@@ -26,7 +26,7 @@
     return selectedOption;
   };
 
-  var checkfilterHousingType = function (oneOffer) {
+  var checkFilterHousingType = function (oneOffer) {
     if (searchValueSelectedOption(filterHousingType) === WITHOUT_FILTER) {
       return oneOffer;
     } else {
@@ -82,7 +82,7 @@
     var filteredOffers = window.offers
     .slice()
     .filter(function (oneOffer) {
-      return checkfilterHousingType(oneOffer) &&
+      return checkFilterHousingType(oneOffer) &&
       checkfilterPrice(oneOffer) &&
       checkfilterRooms(oneOffer) &&
       checkfilterGuests(oneOffer) &&

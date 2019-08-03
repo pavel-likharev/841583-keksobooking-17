@@ -51,6 +51,7 @@
     window.pinHadler();
     window.pin.getCoordsMainPin(HEIGHT_PIN);
     window.removeOffers();
+    window.removeCard();
     var photos = photosContainer.querySelectorAll('.upload__photo');
     for (var i = 0; i < photos.length; i++) {
       photosContainer.removeChild(photos[i]);
@@ -68,7 +69,7 @@
       successElement.classList.add('hidden');
     });
     document.addEventListener('keydown', function (evt) {
-      if (window.util.isEscPressed) {
+      if (evt.keyCode === window.util.ESC_KEYCODE) {
         evt.preventDefault();
         resetPage();
         successElement.classList.add('hidden');

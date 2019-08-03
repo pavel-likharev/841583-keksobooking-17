@@ -4,6 +4,7 @@
   var URL_OPEN = 'https://js.dump.academy/keksobooking/data';
   var URL_SEND = 'https://js.dump.academy/keksobooking';
   var TIMEOUT = 10000;
+  var SUCCESS_STATUS = 200;
 
   window.data = {
     load: function (onSuccess, onError) {
@@ -12,7 +13,7 @@
       xhr.responseType = 'json';
 
       xhr.addEventListener('load', function () {
-        if (xhr.status === 200) {
+        if (xhr.status === SUCCESS_STATUS) {
           onSuccess(xhr.response);
         } else {
           onError('Статус объекта: ' + xhr.status + ' ' + xhr.statusText);
@@ -38,7 +39,7 @@
       xhr.responseType = 'json';
 
       xhr.addEventListener('load', function () {
-        if (xhr.status === 200) {
+        if (xhr.status === SUCCESS_STATUS) {
           onSuccess(xhr.response);
         } else {
           onError('Статус объекта: ' + xhr.status + ' ' + xhr.statusText);

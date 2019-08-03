@@ -1,13 +1,11 @@
 'use strict';
 
 (function () {
-  var ESC_KEYCODE = 27;
-
   window.popup = {
     error: function () {
-      var templatError = document.querySelector('#error').content.querySelector('.error');
+      var templateError = document.querySelector('#error').content.querySelector('.error');
       var mainPage = document.querySelector('main');
-      var errorElement = templatError.cloneNode(true);
+      var errorElement = templateError.cloneNode(true);
       var btnCancelError = errorElement.querySelector('.error__button');
       btnCancelError.addEventListener('click', function () {
         errorElement.classList.add('hidden');
@@ -16,7 +14,7 @@
         errorElement.classList.add('hidden');
       });
       document.addEventListener('keydown', function (evt) {
-        if (evt.keyCode === ESC_KEYCODE) {
+        if (evt.keyCode === window.util.ESC_KEYCODE) {
           evt.preventDefault();
           errorElement.classList.add('hidden');
         }
