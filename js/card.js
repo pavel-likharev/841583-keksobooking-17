@@ -1,15 +1,15 @@
 'use strict';
 
 (function () {
-
   var ESC_KEYCODE = 27;
 
   var map = document.querySelector('.map');
   var mapFilters = document.querySelector('.map__filters');
-  var card = document.querySelector('#card').content.querySelector('.map__card');
+  var templateCard = document.querySelector('#card').content.querySelector('.map__card');
 
+  // Функция запуска создания карточки
   var renderCard = function (dataElement) {
-    var cardElement = card.cloneNode(true);
+    var cardElement = templateCard.cloneNode(true);
     var cardAvatar = cardElement.querySelector('.popup__avatar');
     var cardTitle = cardElement.querySelector('.popup__title');
     var cardAddress = cardElement.querySelector('.popup__text--address');
@@ -23,6 +23,13 @@
     var cardPhotos = cardElement.querySelector('.popup__photos');
     var cardPhoto = cardElement.querySelector('.popup__photo');
 
+    var typeToRusName = {
+      'bungalo': 'Бунгало',
+      'palace': 'Дворец',
+      'flat': 'Квартира',
+      'house': 'Дом'
+    };
+
     cardPhotos.removeChild(cardPhoto);
     var createCopyCardPhoto = function () {
       var copyCard = cardPhoto.cloneNode(true);
@@ -30,17 +37,7 @@
     };
 
     var translateNameType = function (type) {
-      var translatedType;
-      if (type === 'bungalo') {
-        translatedType = 'Бунгало';
-      } else if (type === 'palace') {
-        translatedType = 'Дворец';
-      } else if (type === 'flat') {
-        translatedType = 'Квартира';
-      } else if (type === 'house') {
-        translatedType = 'Дом';
-      }
-      return translatedType;
+      return typeToRusName[type];
     };
 
     cardAvatar.src = dataElement.author.avatar;
@@ -79,11 +76,12 @@
     return cardElement;
   };
 
-  window.card.render = function (dataCard) {
+  // Функция отрисовки карточки на странице
+  window.render = function (dataCard) {
     var fragment = document.createDocumentFragment();
     var generatedCard = renderCard(dataCard);
     generatedCard.classList.add('visible__card');
-    mapFilters.addEventListener('change', window.removeCard);
+
     var close = generatedCard.querySelector('.popup__close');
     close.addEventListener('click', function () {
       map.removeChild(generatedCard);
@@ -94,8 +92,11 @@
         window.removeCard();
       }
     });
+
     fragment.appendChild(generatedCard);
     map.appendChild(fragment);
+
+    mapFilters.addEventListener('change', window.removeCard);
   };
 
 })();

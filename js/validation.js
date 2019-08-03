@@ -1,36 +1,17 @@
 'use strict';
 
 (function () {
-  var PRICE_BUNGALO = 0;
-  var PRICE_FLAT = 1000;
-  var PRICE_HOUSE = 5000;
-  var PRICE_PALACE = 10000;
+  var form = document.querySelector('.ad-form');
+  var btnSubmitForm = form.querySelector('.ad-form__submit');
 
-  var btnSubmitForm = document.querySelector('.ad-form__submit');
+  var price = form.querySelector('#price');
+  var selectTypesHouse = form.querySelector('#type');
 
-  var price = document.querySelector('#price');
-  var selectTypesHouse = document.querySelector('#type');
+  var timeIn = form.querySelector('#timein');
+  var timeOut = form.querySelector('#timeout');
 
-  var timeIn = document.querySelector('#timein');
-  var timeOut = document.querySelector('#timeout');
-
-  var roomsNumber = document.querySelector('#room_number');
-  var guestsNumber = document.querySelector('#capacity');
-
-  var Rooms = {
-    ONE_ROOMS: roomsNumber.options[0],
-    TWO_ROOMS: roomsNumber.options[1],
-    THREE_ROOMS: roomsNumber.options[2],
-    ONE_HUNDRED_ROOMS: roomsNumber.options[3]
-  };
-
-  var Guests = {
-    THREE_GUESTS: guestsNumber.options[0],
-    TWO_GUESTS: guestsNumber.options[1],
-    ONE_GUESTS: guestsNumber.options[2],
-    NONE_GUESTS: guestsNumber.options[3]
-  };
-
+  var roomsNumber = form.querySelector('#room_number');
+  var guestsNumber = form.querySelector('#capacity');
 
   // Функция поиска выбранного типа жилья и условие добавления минимального прайса
   var addMinPrice = function () {
@@ -41,73 +22,49 @@
         break;
       }
     }
-    // Тут можно написать цикл с массивом типов жилья, массивом прайсов и
-    // их перебором, с совпадением из верхнего цикла вставлять цену
-    if (selectedType === 'bungalo') {
-      price.min = PRICE_BUNGALO;
-      price.placeholder = PRICE_BUNGALO;
-    } else if (selectedType === 'flat') {
-      price.min = PRICE_FLAT;
-      price.placeholder = PRICE_FLAT;
-    } else if (selectedType === 'house') {
-      price.min = PRICE_HOUSE;
-      price.placeholder = PRICE_HOUSE;
-    } else if (selectedType === 'palace') {
-      price.min = PRICE_PALACE;
-      price.placeholder = PRICE_PALACE;
-    }
+
+    var priceList = {
+      'bungalo': 0,
+      'flat': 1000,
+      'house': 5000,
+      'palace': 10000
+    };
+
+    price.min = priceList[selectedType];
+    price.placeholder = priceList[selectedType];
   };
   selectTypesHouse.addEventListener('change', addMinPrice);
 
   // Функции синхронизации даты заезда и выезда
-  var syncTimeIn = function () {
-    for (var i = 0; i < timeIn.options.length; i++) {
-      var checkTimeIn = timeIn.options[i];
-
-      if (checkTimeIn.selected) {
-        timeOut[i].selected = true;
-        break;
-      }
-
-    }
+  var onCheckInTimeChange = function () {
+    timeOut.value = timeIn.value;
+  };
+  var onCheckOutTimeChange = function () {
+    timeIn.value = timeOut.value;
   };
 
-  var syncTimeOut = function () {
-    for (var i = 0; i < timeIn.options.length; i++) {
-      var checkTimeOut = timeOut.options[i];
+  timeIn.addEventListener('change', onCheckInTimeChange);
+  timeOut.addEventListener('change', onCheckOutTimeChange);
 
-      if (checkTimeOut.selected) {
-        timeIn[i].selected = true;
-        break;
-      }
-    }
-  };
-
-  timeIn.addEventListener('change', syncTimeIn);
-  timeOut.addEventListener('change', syncTimeOut);
-
-  // Соответствие кол-ва гостей кол-ву комнат
-
+  // Функция соответствия кол-ва гостей кол-ву комнат
   var syncRoomsGuests = function () {
-    if (Rooms.ONE_ROOMS.selected && Guests.TWO_GUESTS.selected) {
-      roomsNumber.setCustomValidity('Выберите две комнаты');
-    } else if (Rooms.ONE_ROOMS.selected && Guests.THREE_GUESTS.selected) {
-      roomsNumber.setCustomValidity('Выберите три комнаты');
-    } else if (Rooms.TWO_ROOMS.selected && Guests.THREE_GUESTS.selected) {
-      roomsNumber.setCustomValidity('Выберите три комнаты');
-    } else if ((Rooms.ONE_ROOMS.selected || Rooms.TWO_ROOMS.selected || Rooms.THREE_ROOMS.selected) && Guests.NONE_GUESTS.selected) {
-      roomsNumber.setCustomValidity('Выберите сто комнат');
-    } else if (Rooms.ONE_HUNDRED_ROOMS.selected && (Guests.ONE_GUESTS.selected || Guests.TWO_GUESTS.selected || Guests.THREE_GUESTS.selected)) {
-      guestsNumber.setCustomValidity('Выберите 100 гостей');
-    } else if (
-      (Rooms.ONE_ROOMS.selected && Guests.ONE_GUESTS.selected) ||
-      (Rooms.TWO_ROOMS.selected && (Guests.ONE_GUESTS.selected || Guests.TWO_GUESTS.selected)) ||
-      (Rooms.THREE_ROOMS.selected && (Guests.ONE_GUESTS.selected || Guests.TWO_GUESTS.selected || Guests.THREE_GUESTS.selected)) ||
-      (Rooms.ONE_HUNDRED_ROOMS.selected && Guests.NONE_GUESTS.selected)) {
-      guestsNumber.setCustomValidity('');
-      roomsNumber.setCustomValidity('');
+    var roomToGuestMessage = '';
+    if (roomsNumber.value !== '100') {
+      if (guestsNumber.value > roomsNumber.value) {
+        roomToGuestMessage = 'Выберите кол-во гостей не больше ' + roomsNumber.value;
+      } else {
+        if (guestsNumber.value === '0') {
+          roomToGuestMessage = 'Выберите 100 комнат для нежилого съема';
+        }
+      }
+    } else {
+      if (guestsNumber.value !== '0') {
+        roomToGuestMessage = 'Выберите "не для гостей"';
+      }
     }
+    guestsNumber.setCustomValidity(roomToGuestMessage);
   };
+
   btnSubmitForm.addEventListener('click', syncRoomsGuests);
   roomsNumber.addEventListener('change', syncRoomsGuests);
   guestsNumber.addEventListener('change', syncRoomsGuests);

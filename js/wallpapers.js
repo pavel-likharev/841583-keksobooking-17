@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 
   var fileChooserAvatar = document.querySelector('.ad-form-header__input');

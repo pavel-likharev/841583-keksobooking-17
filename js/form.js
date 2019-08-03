@@ -1,40 +1,38 @@
 'use strict';
 
 (function () {
-
-  var ESC_KEYCODE = 27;
   var AVATAR_DEFAULT = 'img/muffin-grey.svg';
   var HEIGHT_PIN = 62;
 
   var form = document.querySelector('.ad-form');
   var btnReset = form.querySelector('.ad-form__reset');
+
   var map = document.querySelector('.map');
   var mainPin = document.querySelector('.map__pin--main');
   var mainPage = document.querySelector('main');
-  var error = document.querySelector('#error').content.querySelector('.error');
-  var success = document.querySelector('#success').content.querySelector('.success');
-  var btnSubmit = form.querySelector('.ad-form__submit');
+  var templateSuccess = document.querySelector('#success').content.querySelector('.success');
+
   var photosContainer = document.querySelector('.ad-form__photo-container');
   var avatar = document.querySelector('.ad-form-header__preview img');
 
+  // Узнаём первоначальные координаты главного пина
   var startCoordsMainPin = {};
 
-  var getStartCoordsMainPin = function () {
+  (function () {
     startCoordsMainPin = {
       leftCoord: mainPin.style.left,
       topCoord: mainPin.style.top
     };
     return startCoordsMainPin;
-  };
-  getStartCoordsMainPin();
+  })();
 
-  // Блокируем все fieldset
+  // Функция блокировки формы
   var getDisabledFieldsets = function (value) {
     var allFieldset = document.querySelectorAll('.ad-form__element');
     var inputHeader = document.querySelector('.ad-form-header');
     inputHeader.disabled = value;
-    for (var j = 0; j < allFieldset.length; j++) {
-      allFieldset[j].disabled = value;
+    for (var i = 0; i < allFieldset.length; i++) {
+      allFieldset[i].disabled = value;
     }
   };
   getDisabledFieldsets(true);
@@ -43,9 +41,9 @@
     getDisabledFieldsets(false);
   });
 
+  // Функция сброса страницы
   var resetPage = function () {
     btnReset.click();
-    getDisabledFieldsets(true);
     form.classList.add('ad-form--disabled');
     mainPin.style.left = startCoordsMainPin.leftCoord;
     mainPin.style.top = startCoordsMainPin.topCoord;
@@ -58,19 +56,23 @@
       photosContainer.removeChild(photos[i]);
     }
     avatar.src = AVATAR_DEFAULT;
+
   };
 
-  var successHandler = function () {
-    var successElement = success.cloneNode(true);
+  // Функция действий при успешной загрузки данных на сервер
+  var successSend = function () {
+    var successElement = templateSuccess.cloneNode(true);
     successElement.addEventListener('click', function () {
       resetPage();
+      window.pinHadler();
       successElement.classList.add('hidden');
     });
     document.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === ESC_KEYCODE) {
+      if (window.util.isEscPressed) {
         evt.preventDefault();
         resetPage();
         successElement.classList.add('hidden');
+
       }
     });
     var fragment = document.createDocumentFragment();
@@ -78,25 +80,12 @@
     mainPage.appendChild(fragment);
   };
 
-  // Задаём функцию действий при ошибке загрузки данных
-  var errorHandler = function () {
-    var errorElement = error.cloneNode(true);
-    var btnCancelError = errorElement.querySelector('.error__button');
-    btnCancelError.addEventListener('click', function () {
-      errorElement.classList.add('hidden');
-    });
-    var fragment = document.createDocumentFragment();
-    fragment.appendChild(errorElement);
-    mainPage.appendChild(fragment);
-  };
-
-
-  form.addEventListener('submit', function (event) {
-    window.upload(new FormData(form), successHandler, errorHandler);
-    btnSubmit.disabled = true;
-    window.pinHadler();
-    event.preventDefault();
+  // Назначение обработчиков
+  form.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+    window.data.send(new FormData(form), successSend, window.popup.error);
   });
 
   btnReset.addEventListener('click', resetPage);
+  btnReset.addEventListener('click', getDisabledFieldsets(true));
 })();

@@ -1,9 +1,8 @@
 'use strict';
 
 (function () {
-
   var HEIGHT_POINTER_PIN = 84;
-  var HEIGHT_PIN = 62;
+  var HEIGHT_CIRCLE_PIN = 62;
 
   var mainPin = document.querySelector('.map__pin--main');
   var map = document.querySelector('.map');
@@ -11,33 +10,32 @@
   var form = document.querySelector('.ad-form');
 
 
-  var limits = {
-    top: mapOverlay.offsetTop,
+  var limitsMap = {
+    top: 130,
     right: mapOverlay.offsetWidth + mapOverlay.offsetLeft - mainPin.offsetWidth,
-    bottom: mapOverlay.offsetHeight + mapOverlay.offsetTop - mainPin.offsetHeight,
+    bottom: 630,
     left: mapOverlay.offsetLeft
   };
 
-  var pinCoords;
-
+  // Функция получения координат главного маркера
   var getCoords = function (elem, height) {
-    pinCoords = elem.getBoundingClientRect();
+    var coords = elem.getBoundingClientRect();
 
     return {
-      left: (pinCoords.left + (pinCoords.width / 2)) + pageXOffset,
-      top: (pinCoords.top + height) + pageYOffset
+      left: (coords.left + (coords.width / 2)) + pageXOffset,
+      top: (coords.top + height) + pageYOffset
     };
   };
 
-  // Функция для поиска координат на документе
+  // Функция для поиска координат главного маркера
   window.pin.getCoordsMainPin = function (height) {
     var coordsMainPin = getCoords(mainPin, height);
-    var adress = document.querySelector('#address');
+    var adress = form.querySelector('#address');
     adress.value = coordsMainPin.left + ', ' + coordsMainPin.top;
   };
-  window.pin.getCoordsMainPin(HEIGHT_PIN);
+  window.pin.getCoordsMainPin(HEIGHT_CIRCLE_PIN);
 
-  // Производим активацию страницы
+  // Функция активации страницы
   var getPinClickHadler = function () {
     mainPin.addEventListener('mousedown', function () {
       window.pin.getCoordsMainPin(HEIGHT_POINTER_PIN);
@@ -50,7 +48,7 @@
   };
   getPinClickHadler();
 
-  //  Обработчик для передвижения маркера
+  // Обработчик для передвижения маркера
   mainPin.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
 
@@ -75,16 +73,16 @@
       var coordsTop = mainPin.offsetTop - shift.y;
       var coordsLeft = mainPin.offsetLeft - shift.x;
 
-      if (coordsTop < limits.top) {
-        coordsTop = limits.top;
-      } else if (coordsTop > limits.bottom) {
-        coordsTop = limits.bottom;
+      if (coordsTop < limitsMap.top) {
+        coordsTop = limitsMap.top;
+      } else if (coordsTop > limitsMap.bottom) {
+        coordsTop = limitsMap.bottom;
       }
 
-      if (coordsLeft < limits.left) {
-        coordsLeft = limits.left;
-      } else if (coordsLeft > limits.right) {
-        coordsLeft = limits.right;
+      if (coordsLeft < limitsMap.left) {
+        coordsLeft = limitsMap.left;
+      } else if (coordsLeft > limitsMap.right) {
+        coordsLeft = limitsMap.right;
       }
 
       mainPin.style.top = coordsTop + 'px';
