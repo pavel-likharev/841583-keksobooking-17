@@ -68,6 +68,9 @@
     window.renderMap(window.offers);
     mainPin.removeEventListener('mouseup', callRender);
   };
+  window.pinHadler = function () {
+    mainPin.addEventListener('mouseup', callRender);
+  };
   window.pinHadler();
 
 })();
